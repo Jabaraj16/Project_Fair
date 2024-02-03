@@ -1,0 +1,37 @@
+  const handleAdd=async()=>{
+    const {title,overview,github,website,language,projectImage}=projectData
+    if(!title|| !overview || !github || !website || !language || !projectImage){
+      toast.info("Please upload form completly")
+    }else{
+      //api call-body
+      const reqBody=new FormData()
+      reqBody.append("title",title)
+      reqBody.append("language",language)
+      reqBody.append("overview",overview)
+      reqBody.append("github",github)
+      reqBody.append("website",website)
+      reqBody.append("projectImage",projectImage)
+      
+
+      //api call-header
+      const token=sessionStorage.getItem("token")
+      if(token){
+        const reqHeader={
+          "Content-Type":"multipart/form-data",
+          "Authorization":`Bearer ${token}`
+        }
+
+        try{
+          const result= await addProjectAPI(reqBody,reqHeader)
+          if(result.status===200){
+            handleClose()
+          }
+          else{
+            toast.warning(result.response.data)
+          }
+        }catch(err){
+          console.log(err);
+        }
+      }
+    }
+  }
